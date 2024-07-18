@@ -20,16 +20,17 @@ function App() {
       // Return 0 to indicate successful execution
       return 0; 
   }`);
+  const [language, setLanguage] = useState('cpp'); 
   const [output, setOutput] = useState('');
 
   const handleSubmit = async () => {
     const payload = {
-      language: 'cpp',
+      language,
       code
     };
 
     try {
-      const { data } = await axios.post('http://localhost:5000/run', payload);
+      const { data } = await axios.post('http://localhost:5001/run', payload);
       console.log(data);
       setOutput(data.output);
     } catch (error) {
@@ -39,15 +40,19 @@ function App() {
 
   return (
     <div className="container mx-auto py-8 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4">AlgoU Online Code Compiler</h1>
-      <select className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500">
+      <h1 className="text-3xl font-bold mb-4">Online Code Compiler</h1>
+      <select
+        className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500"
+        value={language}
+        onChange={(e) => setLanguage(e.target.value)} // Update language state on change
+      >
         <option value='cpp'>C++</option>
         <option value='c'>C</option>
         <option value='py'>Python</option>
         <option value='java'>Java</option>
       </select>
       <br />
-      <div className="bg-gray-100 shadow-md w-full max-w-lg mb-4" style={{ height: '300px', overflowY: 'auto' }}>
+      <div className="bg-gray-100 shadow-md w-full max-w-lg mb-4" style={{ height: '500px', width: '800px', overflowY: 'auto' }}>
         <Editor
           value={code}
           onValueChange={code => setCode(code)}
@@ -73,12 +78,17 @@ function App() {
         Run
       </button>
 
-      {output &&
+      {/*{output &&
         <div className="outputbox mt-4 bg-gray-100 rounded-md shadow-md p-4">
           <p style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',
             fontSize: 12,
           }}>{output}</p>
+        </div>
+      }*/}
+       {output &&
+        <div className="output-container bg-gray-100 shadow-md w-full max-w-lg mb-4" style={{ height: '100px', width: '800px', overflowY: 'auto' }}>
+          <p>{output}</p>
         </div>
       }
     </div>
